@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
 import 'package:flutter_application_project_1/data/temp_patient_list.dart';
+import 'package:flutter_application_project_1/services/patient_service.dart';
 
 class PatientListTile extends StatelessWidget {
-  final TempPatientModel patientData;
-  
-  
+  final PatientModel patientData;
+
   const PatientListTile({
     required this.patientData,
   });
@@ -16,105 +17,108 @@ class PatientListTile extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/patientdetails', arguments: patientData.id);
+          Navigator.pushNamed(context, '/patientdetails',
+              arguments: patientData.id);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Image.asset(
-                        'assets/images/patientIcon.png',
-                        height: 40,
-                        width: 40,
-                        fit: BoxFit.cover,
-                      ),
+                    'assets/images/patientIcon.png',
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                Text(patientData.name),
-                Text("          ${patientData.age} Years"),
+                Text("${patientData.firstName} ${patientData.lastName}"),
+                const SizedBox(width: 10),
+                Text("${patientData.dateOfBirth} Years"),
               ],
             ),
             const SizedBox(height: 5),
-            Row(
-              children: [
-                  SizedBox(width: 110,
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 8),
-                      Image.asset(
-                        patientData.images[0],
-                        height: 20,
-                        width: 20,
-                        fit: BoxFit.cover,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        patientData.readings[0],
-                        style: const TextStyle(
-                          fontSize: 10
-                          
-                        )///textAlign: TextAlign.center,
-                      ),
-                      
-                    ],
-                  ),
-                ),
-                Row(
-                  children:
-                    List.generate(3,
-                    (index) => SizedBox( width: 85,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
                       child: Row(
                         children: [
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 8),
                           Image.asset(
-                            patientData.images[index+1],
+                            "assets/images/bloodLevel_green.png",
                             height: 20,
                             width: 20,
                             fit: BoxFit.cover,
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            patientData.readings[index+1],
-                            style: const TextStyle(
-                              fontSize: 10
-                              
-                            )///textAlign: TextAlign.center,
-                          ),
-                          
+                          const Text("0mmHg", style: TextStyle(fontSize: 10)
+
+                              ///textAlign: TextAlign.center,
+                              ),
                         ],
                       ),
                     ),
-                  ),
-                )
-              ]
-              // List.generate(4,
-              //   (index) => SizedBox( width: 70,
-              //     child: Row(
-              //       children: [
-              //         const SizedBox(width: 8),
-              //         Image.asset(
-              //           'assets/images/patientIcon.png',
-              //           height: 20,
-              //           width: 20,
-              //           fit: BoxFit.cover,
-              //         ),
-              //         const SizedBox(width: 8),
-              //         Text(
-              //           patientData.readings[index],
-              //           style: const TextStyle(
-              //             fontSize: 10
-                          
-              //           )///textAlign: TextAlign.center,
-              //         ),
-                      
-              //       ],
-              //     ),
-              //   ),
-              // ),
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          Image.asset(
+                            "assets/images/heartRate_green.png",
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text("0/min", style: TextStyle(fontSize: 10)
+
+                              ///textAlign: TextAlign.center,
+                              ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          Image.asset(
+                            "assets/images/oxyLevel_green.png",
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text("0%", style: TextStyle(fontSize: 10)
+
+                              ///textAlign: TextAlign.center,
+                              ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 8),
+                          Image.asset(
+                            "assets/images/respiRate_green.png",
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text("0/min", style: TextStyle(fontSize: 10)
+
+                              ///textAlign: TextAlign.center,
+                              ),
+                        ],
+                      ),
+                    ),
+                  ]),
             ),
             const SizedBox(height: 10)
           ],
@@ -124,10 +128,37 @@ class PatientListTile extends StatelessWidget {
   }
 }
 
-class DashBoardPage extends StatelessWidget {
+class DashBoardPage extends StatefulWidget {
   DashBoardPage({super.key});
-  //final String patientsCount = (tempPatientListFull.length) as String;
-  //final String criticalPatientsCount = (tempPatientListCritical.length) as String;
+
+  @override
+  State<DashBoardPage> createState() => _DashBoardPageState();
+}
+
+class _DashBoardPageState extends State<DashBoardPage> {
+  List<PatientModel> patients = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPatients();
+  }
+
+  _fetchPatients() async {
+    try {
+      var fetchedPatients = await PatientService().getAllPatients();
+      setState(() {
+        patients = fetchedPatients;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("An error occurred while loading patients: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,106 +166,117 @@ class DashBoardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('HOME'),
       ),
-      body: Center(
-
+      body: SingleChildScrollView(
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Container(
-              color: Colors.grey[200],
-              child:
-              Column( children: [
+                color: Colors.grey[200],
+                child: Column(children: [
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
-
-              Row( children: [
-                
-                Card( 
-                  color: Colors.white,
-                  child: 
-                  
-                  Padding( 
-                  padding: const EdgeInsets.all(15), 
-                  child: 
-                  
-                  Column( children:[
-                    
-                    const Text("Admitted Patients", style: TextStyle(
-                        fontSize: 14, // Font size
-                        fontWeight: FontWeight.bold, // Font weight
-                        color: Color.fromARGB(255, 143, 136, 136), // Text color
-                      ),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(children: [
+                                const Text(
+                                  "Admitted Patients",
+                                  style: TextStyle(
+                                    fontSize: 12, // Font size
+                                    fontWeight: FontWeight.bold, // Font weight
+                                    color: Color.fromARGB(
+                                        255, 143, 136, 136), // Text color
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  "${patients.where((element) => element.isAdmitted).length} Patients",
+                                  style: const TextStyle(
+                                    fontSize: 22, // Font size
+                                    fontWeight: FontWeight.bold, // Font weight
+                                    color: Colors.black, // Text color
+                                  ),
+                                )
+                              ]))),
                     ),
-                    
-                    const SizedBox(height: 10),
-                    
-                    Text("${tempPatientListFull.length} Patients", style: const TextStyle(
-                        fontSize: 20, // Font size
-                        fontWeight: FontWeight.bold, // Font weight
-                        color: Colors.black, // Text color
-                      ),)
-                    ])
-                  )
-                ),
-                
-                Card( 
-                  color: Colors.white,
-                  child: Padding( 
-                  padding: const EdgeInsets.all(15), 
-                  child: Column( children:[
-                    const Text("High Priority Patients", style: TextStyle(
-                        fontSize: 14, // Font size
-                        fontWeight: FontWeight.bold, // Font weight
-                        color: Color.fromARGB(255, 143, 136, 136), // Text color
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text( "${tempPatientListCritical.length} Patients", style: const TextStyle(
-                        fontSize: 20, // Font size
-                        fontWeight: FontWeight.bold, // Font weight
-                        color: Colors.black, // Text color
-                      ),)
-                    ])
-                  )
-                )
-              ]),
-              const Text("Requires Attention", style: TextStyle(
-                  fontSize: 15, // Font size
-                  fontWeight: FontWeight.bold, // Font weight
-                  color: Colors.black,
-                )
-              ),
-              const SizedBox(height: 10),
-              SizedBox(height: 200, child:
-              ListView.builder(
-              itemCount: tempPatientListCritical.length,
-              itemBuilder: (context, index) {
-                  return PatientListTile(
-                    patientData: tempPatientListCritical[index],
-                  );
-                },
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: Card(
+                          color: Colors.white,
+                          child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(children: [
+                                const Text(
+                                  "High Priority Patients",
+                                  style: TextStyle(
+                                    fontSize: 12, // Font size
+                                    fontWeight: FontWeight.bold, // Font weight
+                                    color: Color.fromARGB(
+                                        255, 143, 136, 136), // Text color
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  "${patients.where((element) => element.condition == 'critical').length} Patients",
+                                  style: const TextStyle(
+                                    fontSize: 22, // Font size
+                                    fontWeight: FontWeight.bold, // Font weight
+                                    color: Colors.black, // Text color
+                                  ),
+                                )
+                              ]))),
+                    )
+                  ]),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 12, 8, 8),
+                    child: Text("Requires Attention",
+                        style: TextStyle(
+                          fontSize: 15, // Font size
+                          fontWeight: FontWeight.bold, // Font weight
+                          color: Colors.black,
+                        )),
+                  ),
+                  const SizedBox(height: 10),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: patients
+                        .where((element) => element.condition == 'critical')
+                        .length,
+                    itemBuilder: (context, index) {
+                      return PatientListTile(
+                        patientData: patients
+                            .where((element) => element.condition == 'critical')
+                            .toList()[index],
+                      );
+                    },
+                  ), //const Divider(),
+                ])),
+            const Padding(
+              padding: EdgeInsets.all(18.0),
+              child: Text("Admitted Patients",
+                  style: TextStyle(
+                    fontSize: 15, // Font size
+                    fontWeight: FontWeight.bold, // Font weight
+                    color: Colors.black,
+                  )),
             ),
-            ), //const Divider(),
-              ])
-            ),
-           
-            const Text("Admitted Patients", style: TextStyle(
-                  fontSize: 15, // Font size
-                  fontWeight: FontWeight.bold, // Font weight
-                  color: Colors.black,
-                )
-              ),
-              const SizedBox(height: 10),
-            Expanded(child: 
+            const SizedBox(height: 10),
             ListView.builder(
-              itemCount: tempPatientListFull.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: patients.where((element) => element.isAdmitted).length,
               itemBuilder: (context, index) {
-                  return PatientListTile(
-                    patientData: tempPatientListFull[index],
-                  );
-                },
-            ),
+                return PatientListTile(
+                  patientData: patients
+                      .where((element) => element.isAdmitted)
+                      .toList()[index],
+                );
+              },
             ),
           ],
         ),

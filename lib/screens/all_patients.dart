@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
 import 'package:flutter_application_project_1/data/temp_patient_list.dart';
-
+import 'package:flutter_application_project_1/services/patient_service.dart';
 
 class PatientListItem extends StatelessWidget {
-  final TempPatientModel patientData;
-  
-  
+  final PatientModel patientData;
+
   const PatientListItem({
     required this.patientData,
   });
@@ -15,9 +14,11 @@ class PatientListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/patientdetails', arguments: patientData.id);
+          Navigator.pushNamed(context, '/patientdetails',
+              arguments: patientData.id);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,25 +29,41 @@ class PatientListItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Image.asset(
-                        'assets/images/patientIcon.png',
-                        height: 60,
-                        width: 60,
-                        fit: BoxFit.cover,
-                      ),
+                    'assets/images/patientIcon.png',
+                    height: 60,
+                    width: 60,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                Column(children: [
-                  Row(children: [
-                      Text(patientData.name, style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 30),
-                      Text("${patientData.age} Years"),
-                  ],),
-                  const SizedBox(height: 10),
-                  Row(children: [
-                      Text("ID: ${patientData.id}", style: const TextStyle(color: Color.fromARGB(255, 95, 12, 177), fontWeight: FontWeight.bold),),
-                      const SizedBox(width: 30),
-                      Text("Condition: ${patientData.condition}"),
-                  ],)
-                ],)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text("${patientData.firstName} ${patientData.lastName}",
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500)),
+                        const SizedBox(width: 30),
+                        Text("${patientData.dateOfBirth} Years"),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          patientData.isAdmitted ? 'Admitted' : "Not Admitted",
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 95, 12, 177),
+                              fontWeight: FontWeight.w300),
+                        ),
+                        const SizedBox(width: 30),
+                        Text("Condition: ${patientData.condition}"),
+                      ],
+                    )
+                  ],
+                )
               ],
             ),
             const SizedBox(height: 10)
@@ -57,9 +74,37 @@ class PatientListItem extends StatelessWidget {
   }
 }
 
-
-class SecondPage extends StatelessWidget {
+class SecondPage extends StatefulWidget {
   const SecondPage({super.key});
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  List<PatientModel> patients = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPatients();
+  }
+
+  _fetchPatients() async {
+    try {
+      var fetchedPatients = await PatientService().getAllPatients();
+      setState(() {
+        patients = fetchedPatients;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("An error occurred while loading patients: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,28 +112,21 @@ class SecondPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('PATIENTS'),
       ),
-
       body: Column(
         children: [
-          Row( mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-          
-            ElevatedButton(onPressed: (){}, 
-            child: const Row(children: [
-              
-              Icon(Icons.delete, color: Colors.red), Text("DELETE ALL", style: TextStyle(
-                fontSize: 15,
-                color: Colors.red
-              
-              ),
-            )
-            ])
-          ),
-
-          const SizedBox(width: 20),]),
-
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            ElevatedButton(
+                onPressed: () {},
+                child: const Row(children: [
+                  Icon(Icons.delete, color: Colors.red),
+                  Text(
+                    "DELETE ALL",
+                    style: TextStyle(fontSize: 15, color: Colors.red),
+                  )
+                ])),
+            const SizedBox(width: 20),
+          ]),
           const Padding(
-
             padding: EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
@@ -98,31 +136,35 @@ class SecondPage extends StatelessWidget {
               ),
             ),
           ),
-          
           Expanded(
             child: ListView.builder(
-              itemCount: tempPatientListFull.length,
+              itemCount: patients.length,
               itemBuilder: (context, index) {
-                  return PatientListItem(
-                    patientData: tempPatientListFull[index],
-                  );
-                },
+                return PatientListItem(
+                  patientData: patients[index],
+                );
+              },
             ),
           ),
           const SizedBox(height: 5),
-          Padding(padding: const EdgeInsets.only(left: 10, right: 10), child:ElevatedButton(
-            onPressed: (){
-              Navigator.pushNamed(context, '/addpatient');
-            },
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/addpatient');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
                 minimumSize: const Size(double.infinity, 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
-                ), 
-              child: const Text("Add New Patient", style: TextStyle(color: Colors.white),), 
               ),
+              child: const Text(
+                "Add New Patient",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ),
           const SizedBox(height: 5),
         ],
