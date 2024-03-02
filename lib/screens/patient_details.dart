@@ -282,11 +282,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                           Row(
                             children: [
                               IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/updatepatient',
-                                        arguments: 3);
-                                  },
+                                  onPressed: () {},
                                   icon: const Icon(Icons.edit,
                                       color: Colors.black)),
                               IconButton(

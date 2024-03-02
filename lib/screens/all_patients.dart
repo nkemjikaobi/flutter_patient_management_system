@@ -112,63 +112,65 @@ class _SecondPageState extends State<SecondPage> {
       appBar: AppBar(
         title: const Text('PATIENTS'),
       ),
-      body: Column(
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            ElevatedButton(
-                onPressed: () {},
-                child: const Row(children: [
-                  Icon(Icons.delete, color: Colors.red),
-                  Text(
-                    "DELETE ALL",
-                    style: TextStyle(fontSize: 15, color: Colors.red),
-                  )
-                ])),
-            const SizedBox(width: 20),
-          ]),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: patients.length,
-              itemBuilder: (context, index) {
-                return PatientListItem(
-                  patientData: patients[index],
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/addpatient');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                minimumSize: const Size(double.infinity, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  ElevatedButton(
+                      onPressed: () {},
+                      child: const Row(children: [
+                        Icon(Icons.delete, color: Colors.red),
+                        Text(
+                          "DELETE ALL",
+                          style: TextStyle(fontSize: 15, color: Colors.red),
+                        )
+                      ])),
+                  const SizedBox(width: 20),
+                ]),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Search...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-              ),
-              child: const Text(
-                "Add New Patient",
-                style: TextStyle(color: Colors.white),
-              ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: patients.length,
+                    itemBuilder: (context, index) {
+                      return PatientListItem(
+                        patientData: patients[index],
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/addpatient');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      minimumSize: const Size(double.infinity, 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      "Add New Patient",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+              ],
             ),
-          ),
-          const SizedBox(height: 5),
-        ],
-      ),
     );
   }
 }

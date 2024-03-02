@@ -166,74 +166,111 @@ class _DashBoardPageState extends State<DashBoardPage> {
       appBar: AppBar(
         title: const Text('HOME'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-                color: Colors.grey[200],
-                child: Column(children: [
-                  const SizedBox(height: 20),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      color: Colors.grey[200],
+                      child: Column(children: [
+                        const SizedBox(height: 20),
 
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: Card(
-                          color: Colors.white,
-                          child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(children: [
-                                const Text(
-                                  "Admitted Patients",
-                                  style: TextStyle(
-                                    fontSize: 12, // Font size
-                                    fontWeight: FontWeight.bold, // Font weight
-                                    color: Color.fromARGB(
-                                        255, 143, 136, 136), // Text color
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "${patients.where((element) => element.isAdmitted).length} Patients",
-                                  style: const TextStyle(
-                                    fontSize: 22, // Font size
-                                    fontWeight: FontWeight.bold, // Font weight
-                                    color: Colors.black, // Text color
-                                  ),
-                                )
-                              ]))),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      child: Card(
-                          color: Colors.white,
-                          child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(children: [
-                                const Text(
-                                  "High Priority Patients",
-                                  style: TextStyle(
-                                    fontSize: 12, // Font size
-                                    fontWeight: FontWeight.bold, // Font weight
-                                    color: Color.fromARGB(
-                                        255, 143, 136, 136), // Text color
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "${patients.where((element) => element.condition == 'critical').length} Patients",
-                                  style: const TextStyle(
-                                    fontSize: 22, // Font size
-                                    fontWeight: FontWeight.bold, // Font weight
-                                    color: Colors.black, // Text color
-                                  ),
-                                )
-                              ]))),
-                    )
-                  ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.45,
+                                child: Card(
+                                    color: Colors.white,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: Column(children: [
+                                          const Text(
+                                            "Admitted Patients",
+                                            style: TextStyle(
+                                              fontSize: 12, // Font size
+                                              fontWeight: FontWeight
+                                                  .bold, // Font weight
+                                              color: Color.fromARGB(255, 143,
+                                                  136, 136), // Text color
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            "${patients.where((element) => element.isAdmitted).length} Patients",
+                                            style: const TextStyle(
+                                              fontSize: 22, // Font size
+                                              fontWeight: FontWeight
+                                                  .bold, // Font weight
+                                              color: Colors.black, // Text color
+                                            ),
+                                          )
+                                        ]))),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.45,
+                                child: Card(
+                                    color: Colors.white,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: Column(children: [
+                                          const Text(
+                                            "High Priority Patients",
+                                            style: TextStyle(
+                                              fontSize: 12, // Font size
+                                              fontWeight: FontWeight
+                                                  .bold, // Font weight
+                                              color: Color.fromARGB(255, 143,
+                                                  136, 136), // Text color
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            "${patients.where((element) => element.condition == 'critical').length} Patients",
+                                            style: const TextStyle(
+                                              fontSize: 22, // Font size
+                                              fontWeight: FontWeight
+                                                  .bold, // Font weight
+                                              color: Colors.black, // Text color
+                                            ),
+                                          )
+                                        ]))),
+                              )
+                            ]),
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(8, 12, 8, 8),
+                          child: Text("Requires Attention",
+                              style: TextStyle(
+                                fontSize: 15, // Font size
+                                fontWeight: FontWeight.bold, // Font weight
+                                color: Colors.black,
+                              )),
+                        ),
+                        const SizedBox(height: 10),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: patients
+                              .where(
+                                  (element) => element.condition == 'critical')
+                              .length,
+                          itemBuilder: (context, index) {
+                            return PatientListTile(
+                              patientData: patients
+                                  .where((element) =>
+                                      element.condition == 'critical')
+                                  .toList()[index],
+                            );
+                          },
+                        ), //const Divider(),
+                      ])),
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(8, 12, 8, 8),
-                    child: Text("Requires Attention",
+                    padding: EdgeInsets.all(18.0),
+                    child: Text("Admitted Patients",
                         style: TextStyle(
                           fontSize: 15, // Font size
                           fontWeight: FontWeight.bold, // Font weight
@@ -244,43 +281,19 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: patients
-                        .where((element) => element.condition == 'critical')
-                        .length,
+                    itemCount:
+                        patients.where((element) => element.isAdmitted).length,
                     itemBuilder: (context, index) {
                       return PatientListTile(
                         patientData: patients
-                            .where((element) => element.condition == 'critical')
+                            .where((element) => element.isAdmitted)
                             .toList()[index],
                       );
                     },
-                  ), //const Divider(),
-                ])),
-            const Padding(
-              padding: EdgeInsets.all(18.0),
-              child: Text("Admitted Patients",
-                  style: TextStyle(
-                    fontSize: 15, // Font size
-                    fontWeight: FontWeight.bold, // Font weight
-                    color: Colors.black,
-                  )),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: patients.where((element) => element.isAdmitted).length,
-              itemBuilder: (context, index) {
-                return PatientListTile(
-                  patientData: patients
-                      .where((element) => element.isAdmitted)
-                      .toList()[index],
-                );
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
