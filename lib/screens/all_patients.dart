@@ -116,18 +116,6 @@ class _SecondPageState extends State<SecondPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  ElevatedButton(
-                      onPressed: () {},
-                      child: const Row(children: [
-                        Icon(Icons.delete, color: Colors.red),
-                        Text(
-                          "DELETE ALL",
-                          style: TextStyle(fontSize: 15, color: Colors.red),
-                        )
-                      ])),
-                  const SizedBox(width: 20),
-                ]),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextField(
@@ -139,13 +127,16 @@ class _SecondPageState extends State<SecondPage> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: patients.length,
-                    itemBuilder: (context, index) {
-                      return PatientListItem(
-                        patientData: patients[index],
-                      );
-                    },
+                  child: RefreshIndicator(
+                    onRefresh: () => _fetchPatients(),
+                    child: ListView.builder(
+                      itemCount: patients.length,
+                      itemBuilder: (context, index) {
+                        return PatientListItem(
+                          patientData: patients[index],
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 5),
