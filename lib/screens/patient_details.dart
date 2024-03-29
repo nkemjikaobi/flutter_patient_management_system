@@ -1,6 +1,8 @@
 //import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_project_1/modals/add_medication_modal.dart';
+import 'package:flutter_application_project_1/modals/add_test_modal.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
 import 'package:flutter_application_project_1/screens/patient_medications_list_item.dart';
 import 'package:flutter_application_project_1/screens/patient_tests_list_item.dart';
@@ -25,6 +27,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
   PatientModel? patientInfo;
   bool isLoading = true;
   bool deleteLoading = false;
+  int _selectedTabIndex = 0;
 
   @override
   void initState() {
@@ -36,6 +39,24 @@ class _PatientDetailPageState extends State<PatientDetailPage>
     patientInfo = await PatientService().getPatientDetails(id);
     isLoading = false;
     return patientInfo;
+  }
+
+  Future<void> _navigateToAddTestModal(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AddTestModal();
+      },
+    );
+  }
+
+  Future<void> _navigateToAddMedicationModal(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const AddMedicationModal();
+      },
+    );
   }
 
   @override
@@ -80,8 +101,16 @@ class _PatientDetailPageState extends State<PatientDetailPage>
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
-          tooltip: 'Increment',
-          onPressed: () {},
+          tooltip: _tabController.index == 1 ? 'Add Test' : 'Add Medication',
+          onPressed: () {
+            if (_tabController.index == 1) {
+              // Navigate to add test modal
+              _navigateToAddTestModal(context);
+            } else if (_tabController.index == 2) {
+              // Navigate to add medication modal
+              _navigateToAddMedicationModal(context);
+            }
+          },
           child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
         body: Center(
@@ -106,7 +135,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${patientInfo?.firstName} ${patientInfo?.lastName}",
+                                "${patientInfo?.firstName} ${patientInfo?.lastName} $_selectedTabIndex",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -370,7 +399,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             )),
                             Container(
                               padding: const EdgeInsets.all(15),
-                             child: patientInfo!.tests.isEmpty
+                              child: patientInfo!.tests.isEmpty
                                   ? const Text('No tests')
                                   : ListView.builder(
                                       itemCount: patientInfo!.tests.length,
@@ -381,14 +410,14 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                                         );
                                       },
                                     ),
-
                             ),
                             Container(
                                 padding: const EdgeInsets.all(15),
                                 child: patientInfo!.medications.isEmpty
                                     ? const Text('No medications')
                                     : ListView.builder(
-                                        itemCount: patientInfo!.medications.length,
+                                        itemCount:
+                                            patientInfo!.medications.length,
                                         itemBuilder: (context, index) {
                                           return PatientMedicationsListItem(
                                             patientMedicationData:
