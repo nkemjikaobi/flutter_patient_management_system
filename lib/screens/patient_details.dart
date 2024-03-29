@@ -1,44 +1,12 @@
 //import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_project_1/data/temp_patient_list.dart';
+import 'package:flutter_application_project_1/models/patient_model.dart';
+import 'package:flutter_application_project_1/screens/patient_tests_list_item.dart';
 import 'package:flutter_application_project_1/screens/update_patient.dart';
 import 'package:flutter_application_project_1/services/patient_service.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
-
-class TestListTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: () {
-          //Add Test View and Functionality Pop-ups
-        },
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(width: 10),
-            Column(
-              children: [
-                Text("Critical",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Text("3", style: TextStyle(fontSize: 12)),
-                Text("24th March 2024", style: TextStyle(fontSize: 12)),
-              ],
-            ),
-            SizedBox(width: 130),
-            Icon(
-              Icons.turn_right,
-              size: 40,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class PatientDetailPage extends StatefulWidget {
   final String patientId;
@@ -60,7 +28,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   Future _fetchPatientDetails(String id) async {
@@ -108,6 +76,12 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                         )
                       ])),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
+          tooltip: 'Increment',
+          onPressed: () {},
+          child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
         body: Center(
           child: FutureBuilder(
@@ -283,8 +257,9 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                       TabBar(
                         controller: _tabController,
                         tabs: const [
-                          Tab(text: 'Patient Details'),
+                          Tab(text: 'Details'),
                           Tab(text: 'Tests'),
+                          Tab(text: 'Medications'),
                         ],
                       ),
                       // Content for each tab
@@ -394,58 +369,68 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             )),
                             Container(
                               padding: const EdgeInsets.all(15),
-                              child: const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Full Body Scan"),
-                                      Text("22nd April 2023")
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Divider(),
-                                  ),
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Head Scan"),
-                                        Text("22nd April 2023")
-                                      ]),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Divider(),
-                                  ),
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Chemo Test"),
-                                        Text("22nd April 2023")
-                                      ]),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Divider(),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Full Body Scan"),
-                                      Text("22nd April 2023")
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Divider(),
-                                  ),
-                                ],
+                              child:  ListView.builder(
+                                itemCount: patientInfo?.tests.length,
+                                itemBuilder: (context, index) {
+                                  return PatientTestsListItem(
+                                    patientTestData: patientInfo!.tests[index],
+                                  );
+                                },
                               ),
                             ),
+                            Container(
+                                padding: const EdgeInsets.all(15),
+                                child: const Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Full Body Medication"),
+                                        Text("22nd April 2023")
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Divider(),
+                                    ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Head Scan"),
+                                          Text("22nd April 2023")
+                                        ]),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Divider(),
+                                    ),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Chemo Test"),
+                                          Text("22nd April 2023")
+                                        ]),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Divider(),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Full Body Scan"),
+                                        Text("22nd April 2023")
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Divider(),
+                                    )
+                                  ],
+                                ))
                           ],
                         ),
                       ),

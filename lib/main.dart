@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_project_1/data/temp_patient_list.dart';
+import 'package:flutter_application_project_1/models/patient_model.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
 

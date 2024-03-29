@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_application_project_1/data/temp_patient_list.dart';
+import 'package:flutter_application_project_1/models/patient_model.dart';
 import 'package:http/http.dart' as http;
 
 class PatientService {
