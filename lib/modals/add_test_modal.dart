@@ -43,7 +43,7 @@ class _AddTestModalState extends State<AddTestModal> {
                 controller: nameController,
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: 'Name', // Placeholder text
+                  labelText: 'Eye Scan', // Placeholder text
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -68,7 +68,7 @@ class _AddTestModalState extends State<AddTestModal> {
                 ],
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: 'Value', // Placeholder text
+                  labelText: '7', // Placeholder text
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -82,7 +82,7 @@ class _AddTestModalState extends State<AddTestModal> {
                 controller: notesController,
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: 'Notes',
+                  labelText: 'This patient is asthmatic',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -91,6 +91,12 @@ class _AddTestModalState extends State<AddTestModal> {
         ),
       ),
       actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
         TextButton(
           onPressed: () {
             // Implement logic for saving the test data
@@ -103,12 +109,6 @@ class _AddTestModalState extends State<AddTestModal> {
                 testDate: DateTime.now().toString());
           },
           child: const Text('Save'),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
         ),
       ],
     );
