@@ -369,14 +369,18 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             )),
                             Container(
                               padding: const EdgeInsets.all(15),
-                              child:  ListView.builder(
-                                itemCount: patientInfo?.tests.length,
-                                itemBuilder: (context, index) {
-                                  return PatientTestsListItem(
-                                    patientTestData: patientInfo!.tests[index],
-                                  );
-                                },
-                              ),
+                             child: patientInfo!.tests.isEmpty
+                                  ? const Text('No tests')
+                                  : ListView.builder(
+                                      itemCount: patientInfo!.tests.length,
+                                      itemBuilder: (context, index) {
+                                        return PatientTestsListItem(
+                                          patientTestData:
+                                              patientInfo!.tests[index],
+                                        );
+                                      },
+                                    ),
+
                             ),
                             Container(
                                 padding: const EdgeInsets.all(15),
