@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
+import 'package:flutter_application_project_1/screens/patient_medications_list_item.dart';
 import 'package:flutter_application_project_1/screens/patient_tests_list_item.dart';
 import 'package:flutter_application_project_1/screens/update_patient.dart';
 import 'package:flutter_application_project_1/services/patient_service.dart';
@@ -384,57 +385,17 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             ),
                             Container(
                                 padding: const EdgeInsets.all(15),
-                                child: const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Full Body Medication"),
-                                        Text("22nd April 2023")
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Divider(),
-                                    ),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Head Scan"),
-                                          Text("22nd April 2023")
-                                        ]),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Divider(),
-                                    ),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Chemo Test"),
-                                          Text("22nd April 2023")
-                                        ]),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Divider(),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Full Body Scan"),
-                                        Text("22nd April 2023")
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Divider(),
-                                    )
-                                  ],
-                                ))
+                                child: patientInfo!.medications.isEmpty
+                                    ? const Text('No medications')
+                                    : ListView.builder(
+                                        itemCount: patientInfo!.medications.length,
+                                        itemBuilder: (context, index) {
+                                          return PatientMedicationsListItem(
+                                            patientMedicationData:
+                                                patientInfo!.medications[index],
+                                          );
+                                        },
+                                      ))
                           ],
                         ),
                       ),

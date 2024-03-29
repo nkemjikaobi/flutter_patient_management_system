@@ -1,3 +1,4 @@
+import 'package:flutter_application_project_1/models/patient_medications_model.dart';
 import 'package:flutter_application_project_1/models/patient_test_model.dart';
 
 class PatientModel {
@@ -16,10 +17,12 @@ class PatientModel {
   String gender;
   String genotype;
   List<PatientTestModel> tests;
+  List<PatientMedicationModel> medications;
 
   PatientModel(
       {this.id = "",
       this.tests = const [],
+      this.medications = const [],
       required this.firstName,
       required this.lastName,
       required this.address,
@@ -40,6 +43,11 @@ class PatientModel {
         .map((dynamic item) => PatientTestModel.fromJson(item))
         .toList();
 
+    List<dynamic> medicationsJson = json['medications'];
+    List<PatientMedicationModel> medications = medicationsJson
+        .map((dynamic item) => PatientMedicationModel.fromJson(item))
+        .toList();
+
     return PatientModel(
         id: json['_id'] as String,
         firstName: json['first_name'] as String,
@@ -55,6 +63,7 @@ class PatientModel {
         isAdmitted: json['isAdmitted'] as bool,
         gender: json['gender'] as String,
         genotype: json['genotype'] as String,
+        medications: medications,
         tests: tests);
   }
 
@@ -74,6 +83,7 @@ class PatientModel {
       'genotype': genotype,
       'email': email,
       'tests': tests,
+      'medications': medications
     };
   }
 }
