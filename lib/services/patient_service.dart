@@ -70,37 +70,6 @@ class PatientService {
     }
   }
 
-  // Future<PatientModel> updatePatient(PatientModel patient, String id) async {
-  //   final Map<String, dynamic> requestBody = {
-  //     "first_name": patient.firstName,
-  //     "last_name": patient.lastName,
-  //     "gender": patient.gender,
-  //     "date_of_birth": patient.dateOfBirth,
-  //     "genotype": patient.genotype,
-  //     "blood_group": patient.bloodGroup,
-  //     "email": patient.email,
-  //     "phone_number": patient.phoneNumber,
-  //     "house_address": patient.address,
-  //     "department": patient.department,
-  //     "doctor": patient.doctor,
-  //   };
-
-  //   final response = await http.put(
-  //     Uri.parse('$_baseUrl/patients/$id'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(requestBody),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     return PatientModel.fromJson(json.decode(response.body));
-  //   } else {
-  //     throw Exception(
-  //         'An error occurred while updating patient. Status code: ${response.statusCode}');
-  //   }
-  // }
-
   //Delete a patient
   Future<PatientModel> deletePatient(String id) async {
     final response = await http.delete(
