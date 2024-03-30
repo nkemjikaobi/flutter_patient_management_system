@@ -42,22 +42,32 @@ class PatientProvider extends ChangeNotifier {
   }
 
   Future<void> addPatient(PatientModel patient) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await PatientService().addPatient(patient);
       // Refresh patient list
       await fetchAllPatients();
     } catch (e) {
       // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<void> updatePatient(PatientModel patient, String id) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await PatientService().updatePatient(patient, id);
       // Refresh patient details
       await fetchPatientDetails(id);
     } catch (e) {
       // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -77,23 +87,33 @@ class PatientProvider extends ChangeNotifier {
   }
 
   Future<void> addTest(PatientTestModel patientTest, String patientId) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await PatientService().addTest(patientTest, patientId);
       // Refresh patient details
       await fetchPatientDetails(patientId);
     } catch (e) {
       // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
   Future<void> addMedication(
       PatientMedicationModel patientMedication, String patientId) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await PatientService().addMedication(patientMedication, patientId);
       // Refresh patient details
       await fetchPatientDetails(patientId);
     } catch (e) {
       // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

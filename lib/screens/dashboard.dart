@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
 import 'package:flutter_application_project_1/providers/patient_provider.dart';
+import 'package:flutter_application_project_1/screens/patient_details.dart';
 import 'package:provider/provider.dart';
 
 class PatientListTile extends StatelessWidget {
@@ -16,8 +18,12 @@ class PatientListTile extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/patientdetails',
-              arguments: patientData.id);
+          // Navigator.pushNamed(context, '/patientdetails',
+          //     arguments: patientData.id);
+
+          Navigator.push(context, CupertinoPageRoute(builder: (context) {
+            return PatientDetailPage(patientId: patientData.id);
+          }));
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

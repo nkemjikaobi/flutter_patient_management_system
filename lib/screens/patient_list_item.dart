@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
-
+import 'package:flutter_application_project_1/screens/patient_details.dart';
 
 class PatientListItem extends StatelessWidget {
   final PatientModel patientData;
 
-  const PatientListItem({super.key, 
+  const PatientListItem({
+    super.key,
     required this.patientData,
   });
 
@@ -15,8 +17,12 @@ class PatientListItem extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/patientdetails',
-              arguments: patientData.id);
+          // Navigator.pushNamed(context, '/patientdetails',
+          //     arguments: patientData.id);
+
+          Navigator.push(context, CupertinoPageRoute(builder: (context) {
+            return PatientDetailPage(patientId: patientData.id);
+          }));
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
