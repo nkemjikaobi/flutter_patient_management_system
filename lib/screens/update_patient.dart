@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
-import 'package:flutter_application_project_1/services/patient_service.dart';
+import 'package:flutter_application_project_1/providers/patient_provider.dart';
+import 'package:provider/provider.dart';
 
 class UpdatePatientPage extends StatefulWidget {
   //const UpdatePatientPage({Key? key}) : super(key: key);
@@ -26,8 +27,6 @@ class _UpdatePatientPage extends State<UpdatePatientPage> {
   String doctor = "";
   String genotype = "";
   String bloodGroup = "";
-
-  bool isLoading = false;
 
   List<String> genderData = <String>['Male', 'Female'];
   List<String> departmentData = <String>[
@@ -64,12 +63,6 @@ class _UpdatePatientPage extends State<UpdatePatientPage> {
     'O+',
     'O-',
   ];
-
-  Future updatePatient(patient, String id) async {
-    isLoading = true;
-    await PatientService().updatePatient(patient, id);
-    isLoading = false;
-  }
 
   @override
   void initState() {
@@ -398,7 +391,10 @@ class _UpdatePatientPage extends State<UpdatePatientPage> {
 
                             // Call addPatient method with the new patient object
 
-                            await updatePatient(newPatient, widget.patientInfo.id)
+                            await Provider.of<PatientProvider>(context,
+                                    listen: false)
+                                .updatePatient(
+                                    newPatient, widget.patientInfo.id)
                                 .then((value) => Navigator.pop(context));
 
                             // Show a SnackBar indicating success
@@ -417,14 +413,16 @@ class _UpdatePatientPage extends State<UpdatePatientPage> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-                        child: isLoading
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : const Text(
-                                "Proceed",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                        child:
+                            Provider.of<PatientProvider>(context, listen: false)
+                                    .isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : const Text(
+                                    "Proceed",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                       ),
                     ),
                     const SizedBox(height: 5),
