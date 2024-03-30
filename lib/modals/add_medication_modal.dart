@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_medications_model.dart';
-import 'package:flutter_application_project_1/services/patient_service.dart';
+import 'package:flutter_application_project_1/providers/patient_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddMedicationModal extends StatefulWidget {
   final String patientId;
@@ -20,14 +21,6 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
   TextEditingController prescriptionController = TextEditingController();
 
   String doctor = "Dr. Rania Abesh";
-
-  bool isLoading = false;
-
-  Future addMedication(patient, id) async {
-    isLoading = true;
-    await PatientService().addMedication(patient, id);
-    isLoading = false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +131,8 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
                   doctor: doctor,
                   medicationDate: DateTime.now().toString());
 
-              await addMedication(newMedication, widget.patientId);
+              await Provider.of<PatientProvider>(context, listen: false)
+                  .addMedication(newMedication, widget.patientId);
 
               const snackBar = SnackBar(
                 content: Text('Patient medication added successfully.'),
@@ -150,7 +144,7 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           },
-          child: isLoading
+          child: Provider.of<PatientProvider>(context, listen: false).isLoading
               ? const Center(child: CircularProgressIndicator())
               : const Text('Save'),
         ),

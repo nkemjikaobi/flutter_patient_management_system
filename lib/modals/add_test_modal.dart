@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_project_1/models/patient_test_model.dart';
-import 'package:flutter_application_project_1/services/patient_service.dart';
+import 'package:flutter_application_project_1/providers/patient_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddTestModal extends StatefulWidget {
   final String patientId;
@@ -19,14 +20,6 @@ class _AddTestModalState extends State<AddTestModal> {
   TextEditingController nameController = TextEditingController();
   TextEditingController valueController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-
-  bool isLoading = false;
-
-  Future addTest(patient, id) async {
-    isLoading = true;
-    await PatientService().addTest(patient, id);
-    isLoading = false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +109,8 @@ class _AddTestModalState extends State<AddTestModal> {
                   value: valueController.text,
                   testDate: DateTime.now().toString());
 
-              await addTest(newTest, widget.patientId);
+              await Provider.of<PatientProvider>(context, listen: false)
+                  .addTest(newTest, widget.patientId);
 
               const snackBar = SnackBar(
                 content: Text('Patient test added successfully.'),
@@ -128,7 +122,7 @@ class _AddTestModalState extends State<AddTestModal> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           },
-          child: isLoading
+          child:  Provider.of<PatientProvider>(context, listen: false).isLoading
               ? const Center(child: CircularProgressIndicator())
               : const Text('Save'),
         ),
