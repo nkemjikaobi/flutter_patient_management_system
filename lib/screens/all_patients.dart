@@ -11,13 +11,9 @@ class SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<SecondPage> {
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<PatientProvider>(context, listen: false).fetchAllPatients();
-    });
   }
 
   @override
