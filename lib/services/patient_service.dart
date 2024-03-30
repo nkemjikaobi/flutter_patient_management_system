@@ -24,6 +24,33 @@ class PatientService {
     }
   }
 
+  // Fetch patients based on search criteria
+  Future<List<PatientModel>> searchPatients({
+    String? search,
+  }) async {
+    final Map<String, dynamic> queryParameters = {};
+
+    if (search != null) {
+      queryParameters['search'] = search;
+    }
+
+    final Uri uri = Uri.parse('$_baseUrl/patients')
+        .replace(queryParameters: queryParameters);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<PatientModel> patients = body
+          .map((dynamic item) =>
+              PatientModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+      return patients;
+    } else {
+      throw Exception('Error while searching patients');
+    }
+  }
+
   //Fetch patient details
   Future<PatientModel> getPatientDetails(String id) async {
     final response = await http.get(Uri.parse('$_baseUrl/patients/$id'));

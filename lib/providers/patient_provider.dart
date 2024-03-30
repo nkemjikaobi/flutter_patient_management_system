@@ -6,11 +6,13 @@ import 'package:flutter_application_project_1/services/patient_service.dart';
 
 class PatientProvider extends ChangeNotifier {
   List<PatientModel> _patients = [];
+  List<PatientModel> _searchResults = [];
   PatientModel? _currentPatient;
   bool _isLoading = false;
   bool _deleteLoading = false;
 
   List<PatientModel> get patients => _patients;
+  List<PatientModel> get searchResults => _searchResults;
   PatientModel? get currentPatient => _currentPatient;
   bool get isLoading => _isLoading;
   bool get deleteLoading => _deleteLoading;
@@ -20,6 +22,23 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _patients = await PatientService().getAllPatients();
+    } catch (e) {
+      // Handle error
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> searchPatients({
+    String? search,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _searchResults = await PatientService().searchPatients(
+        search: search,
+      );
     } catch (e) {
       // Handle error
     } finally {
