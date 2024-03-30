@@ -378,19 +378,28 @@ class _AddPatientPage extends State<AddPatientPage> {
                               genotype: genotype,
                             );
 
-                            // Call addPatient method with the new patient object
-                            await Provider.of<PatientProvider>(context,
-                                    listen: false)
+                            Provider.of<PatientProvider>(context, listen: false)
                                 .addPatient(newPatient)
-                                .then((value) => Navigator.pop(context));
+                                .then((_) {
+                              Navigator.of(context).pop();
 
-                            // Show a SnackBar indicating success
-                            const snackBar = SnackBar(
-                              content: Text('Patient added successfully.'),
-                              backgroundColor: Colors.green,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                              // Show a SnackBar indicating success
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Patient added successfully.'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }).catchError((error) {
+                              // Show a SnackBar indicating error
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Failed to add patient: $error'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(

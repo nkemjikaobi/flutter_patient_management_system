@@ -27,7 +27,6 @@ class PatientService {
   //Fetch patient details
   Future<PatientModel> getPatientDetails(String id) async {
     final response = await http.get(Uri.parse('$_baseUrl/patients/$id'));
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
       return PatientModel.fromJson(body);
@@ -87,8 +86,7 @@ class PatientService {
   }
 
   //Add a new test
-  Future<void> addTest(
-      PatientTestModel patient, String patientId) async {
+  Future<void> addTest(PatientTestModel patient, String patientId) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/patients/$patientId/tests'),
       headers: <String, String>{

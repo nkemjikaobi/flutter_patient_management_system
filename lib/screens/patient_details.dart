@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/modals/add_medication_modal.dart';
 import 'package:flutter_application_project_1/modals/add_test_modal.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
+import 'package:flutter_application_project_1/providers/patient_provider.dart';
 import 'package:flutter_application_project_1/screens/patient_medications_list_item.dart';
 import 'package:flutter_application_project_1/screens/patient_tests_list_item.dart';
 import 'package:flutter_application_project_1/screens/update_patient.dart';
 import 'package:flutter_application_project_1/services/patient_service.dart';
+import 'package:provider/provider.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
 
@@ -26,7 +28,6 @@ class _PatientDetailPageState extends State<PatientDetailPage>
 
   PatientModel? patientInfo;
   bool isLoading = true;
-  bool deleteLoading = false;
   int _selectedTabIndex = 0;
 
   @override
@@ -61,43 +62,12 @@ class _PatientDetailPageState extends State<PatientDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final String patientId =
-        ModalRoute.of(context)!.settings.arguments as String;
-
-    Future deletePatient(String id) async {
-      deleteLoading = true;
-      await PatientService().deletePatient(id);
-      deleteLoading = false;
-    }
+    // final String patientId =
+    //     ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Details'),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  deletePatient(patientId);
-                  Navigator.pushNamed(context, '/patients');
-
-                  // Show a SnackBar indicating success
-                  const snackBar = SnackBar(
-                    content: Text('Patient deleted successfully.'),
-                    backgroundColor: Colors.green,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-                child: deleteLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : const Row(children: [
-                        Icon(Icons.delete, color: Colors.red),
-                        Text(
-                          "DELETE PATIENT",
-                          style: TextStyle(fontSize: 15, color: Colors.red),
-                        )
-                      ])),
-          ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blueAccent,
@@ -115,7 +85,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
         ),
         body: Center(
           child: FutureBuilder(
-              future: _fetchPatientDetails(patientId),
+              future: _fetchPatientDetails(widget.patientId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
@@ -201,8 +171,47 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Handle button onPressed event
+                            onPressed: () async {
+                              PatientModel updatedPatient = PatientModel(
+                                firstName: patientInfo!.firstName,
+                                lastName: patientInfo!.lastName,
+                                address: patientInfo!.address,
+                                dateOfBirth: patientInfo!.dateOfBirth,
+                                department: patientInfo!.department,
+                                doctor: patientInfo!.doctor,
+                                condition: patientInfo!.condition,
+                                isAdmitted: true,
+                                bloodGroup: patientInfo!.bloodGroup,
+                                email: patientInfo!.email,
+                                phoneNumber: patientInfo!.phoneNumber,
+                                gender: patientInfo!.gender,
+                                genotype: patientInfo!.genotype,
+                                id: patientInfo!.id,
+                              );
+
+                              Provider.of<PatientProvider>(context,
+                                      listen: false)
+                                  .updatePatient(
+                                      updatedPatient, patientInfo!.id)
+                                  .then((_) {
+                                // Show a SnackBar indicating success
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Patient admitted successfully.'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              }).catchError((error) {
+                                // Show a SnackBar indicating error
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text('Failed to admit patient: $error'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              });
                             },
                             child: const Text('Admit Patient'),
                           ),
@@ -337,26 +346,45 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                                               },
                                               icon: const Icon(Icons.edit,
                                                   color: Colors.black)),
-                                          deleteLoading
+                                          Provider.of<PatientProvider>(context,
+                                                      listen: false)
+                                                  .deleteLoading
                                               ? const CircularProgressIndicator() // Show CircularProgressIndicator when isLoading is true
                                               : IconButton(
                                                   onPressed: () async {
-                                                    await deletePatient(
-                                                            patientId)
-                                                        .then((value) =>
-                                                            Navigator.pop(
-                                                                context));
+                                                    Provider.of<PatientProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .deletePatient(
+                                                            widget.patientId)
+                                                        .then((_) {
+                                                      Navigator.of(context)
+                                                          .pop();
 
-                                                    // Show a SnackBar indicating success
-                                                    const snackBar = SnackBar(
-                                                      content: Text(
-                                                          'Patient deleted successfully.'),
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(snackBar);
+                                                      // Show a SnackBar indicating success
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text(
+                                                              'Patient deleted successfully.'),
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                        ),
+                                                      );
+                                                    }).catchError((error) {
+                                                      // Show a SnackBar indicating error
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                              'Failed to delete patient: $error'),
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                        ),
+                                                      );
+                                                    });
                                                   },
                                                   icon: const Icon(Icons.delete,
                                                       color: Colors.red),

@@ -131,17 +131,27 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
                   doctor: doctor,
                   medicationDate: DateTime.now().toString());
 
-              await Provider.of<PatientProvider>(context, listen: false)
-                  .addMedication(newMedication, widget.patientId);
+              Provider.of<PatientProvider>(context, listen: false)
+                  .addMedication(newMedication, widget.patientId)
+                  .then((_) {
+                Navigator.of(context).pop();
 
-              const snackBar = SnackBar(
-                content: Text('Patient medication added successfully.'),
-                backgroundColor: Colors.green,
-              );
-
-              Navigator.of(context).pop();
-
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                // Show a SnackBar indicating success
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Patient medication added successfully.'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }).catchError((error) {
+                // Show a SnackBar indicating error
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to add medication: $error'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              });
             }
           },
           child: Provider.of<PatientProvider>(context, listen: false).isLoading

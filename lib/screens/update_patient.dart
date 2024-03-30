@@ -389,21 +389,29 @@ class _UpdatePatientPage extends State<UpdatePatientPage> {
                                 genotype: genotype,
                                 id: widget.patientInfo.id);
 
-                            // Call addPatient method with the new patient object
-
-                            await Provider.of<PatientProvider>(context,
-                                    listen: false)
+                            Provider.of<PatientProvider>(context, listen: false)
                                 .updatePatient(
                                     newPatient, widget.patientInfo.id)
-                                .then((value) => Navigator.pop(context));
-
-                            // Show a SnackBar indicating success
-                            const snackBar = SnackBar(
-                              content: Text('Patient updated successfully.'),
-                              backgroundColor: Colors.green,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                                .then((_) {
+                              Navigator.of(context).pop();
+                              // Show a SnackBar indicating success
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Patient updated successfully.'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }).catchError((error) {
+                              // Show a SnackBar indicating error
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Failed to update patient: $error'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(

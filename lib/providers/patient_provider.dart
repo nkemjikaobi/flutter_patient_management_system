@@ -63,6 +63,7 @@ class PatientProvider extends ChangeNotifier {
       await PatientService().updatePatient(patient, id);
       // Refresh patient details
       await fetchPatientDetails(id);
+      await fetchAllPatients();
     } catch (e) {
       // Handle error
     } finally {
@@ -93,6 +94,7 @@ class PatientProvider extends ChangeNotifier {
       await PatientService().addTest(patientTest, patientId);
       // Refresh patient details
       await fetchPatientDetails(patientId);
+      await fetchAllPatients();
     } catch (e) {
       // Handle error
     } finally {
@@ -109,6 +111,7 @@ class PatientProvider extends ChangeNotifier {
       await PatientService().addMedication(patientMedication, patientId);
       // Refresh patient details
       await fetchPatientDetails(patientId);
+      await fetchAllPatients();
     } catch (e) {
       // Handle error
     } finally {
