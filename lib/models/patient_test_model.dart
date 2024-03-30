@@ -4,11 +4,9 @@ class PatientTestModel {
   String value;
   String testDate;
   String notes;
-  String testId;
 
   PatientTestModel(
       {this.id = "",
-      this.testId = "",
       required this.name,
       required this.value,
       required this.testDate,
@@ -17,7 +15,6 @@ class PatientTestModel {
   factory PatientTestModel.fromJson(Map<String, dynamic> json) {
     return PatientTestModel(
         id: json['_id'] as String,
-        testId: json["id"] as String,
         name: json['name'] as String,
         value: json['value'] as String,
         testDate: json['test_date'] as String,

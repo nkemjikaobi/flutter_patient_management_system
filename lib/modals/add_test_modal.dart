@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_project_1/models/patient_test_model.dart';
+import 'package:flutter_application_project_1/services/patient_service.dart';
 
 class AddTestModal extends StatefulWidget {
-  const AddTestModal({Key? key}) : super(key: key);
+  final String patientId;
+  const AddTestModal({Key? key, required this.patientId}) : super(key: key);
 
   @override
   State<AddTestModal> createState() => _AddTestModalState();
@@ -17,6 +19,14 @@ class _AddTestModalState extends State<AddTestModal> {
   TextEditingController nameController = TextEditingController();
   TextEditingController valueController = TextEditingController();
   TextEditingController notesController = TextEditingController();
+
+  bool isLoading = false;
+
+  Future addTest(patient, id) async {
+    isLoading = true;
+    await PatientService().addTest(patient, id);
+    isLoading = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,17 +108,29 @@ class _AddTestModalState extends State<AddTestModal> {
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Implement logic for saving the test data
-            // Navigator.of(context).pop();
-            _formKey.currentState!.validate();
+            if (_formKey.currentState!.validate()) {
+              PatientTestModel newTest = PatientTestModel(
+                  name: nameController.text,
+                  value: valueController.text,
+                  testDate: DateTime.now().toString());
 
-            PatientTestModel newTest = PatientTestModel(
-                name: nameController.text,
-                value: valueController.text,
-                testDate: DateTime.now().toString());
+              await addTest(newTest, widget.patientId);
+
+              const snackBar = SnackBar(
+                content: Text('Patient test added successfully.'),
+                backgroundColor: Colors.green,
+              );
+
+              Navigator.of(context).pop();
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           },
-          child: const Text('Save'),
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : const Text('Save'),
         ),
       ],
     );

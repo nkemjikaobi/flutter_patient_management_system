@@ -4,12 +4,9 @@ class PatientMedicationModel {
   String doctor;
   String medicationDate;
   String prescription;
-  String medicationId;
-
 
   PatientMedicationModel(
       {this.id = "",
-      this.medicationId = "",
       required this.name,
       required this.medicationDate,
       required this.doctor,
@@ -18,7 +15,6 @@ class PatientMedicationModel {
   factory PatientMedicationModel.fromJson(Map<String, dynamic> json) {
     return PatientMedicationModel(
         id: json['_id'] as String,
-        medicationId: json["id"] as String,
         name: json['name'] as String,
         medicationDate: json['date_prescribed'] as String,
         doctor: json['doctor'] as String,
@@ -30,7 +26,7 @@ class PatientMedicationModel {
       'name': name,
       'doctor': doctor,
       'prescription': prescription,
-      'test_date': medicationDate,
+      'date_prescribed': medicationDate,
     };
   }
 }

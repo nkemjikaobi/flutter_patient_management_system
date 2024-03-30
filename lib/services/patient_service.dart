@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_application_project_1/models/patient_medications_model.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
+import 'package:flutter_application_project_1/models/patient_test_model.dart';
 import 'package:http/http.dart' as http;
 
 class PatientService {
@@ -81,6 +83,44 @@ class PatientService {
     } else {
       throw Exception(
           'An error occurred while deleting patient. Status code: ${response.statusCode}');
+    }
+  }
+
+  //Add a new test
+  Future<void> addTest(
+      PatientTestModel patient, String patientId) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/patients/$patientId/tests'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(patient.toJson()),
+    );
+
+    if (response.statusCode == 201) {
+      // return PatientTestModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception(
+          'An error occurred while adding new test. Status code: ${response.statusCode}');
+    }
+  }
+
+  //Add a new medication
+  Future<void> addMedication(
+      PatientMedicationModel patient, String patientId) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/patients/$patientId/medications'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(patient.toJson()),
+    );
+
+    if (response.statusCode == 201) {
+      // return PatientMedicationModel.fromJson(json.decode(response.body.medications));
+    } else {
+      throw Exception(
+          'An error occurred while adding new medication. Status code: ${response.statusCode}');
     }
   }
 }

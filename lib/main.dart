@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_model.dart';
-//import 'package:flutter/services.dart';
-//import 'package:provider/provider.dart';
+import 'package:flutter_application_project_1/providers/patient_provider.dart';
 
 //get screens
 //import 'package:flutter_application_project_1/screens/dashboard.dart';
@@ -11,8 +10,13 @@ import 'package:flutter_application_project_1/screens/patient_details.dart';
 import 'package:flutter_application_project_1/screens/add_patient.dart';
 import 'package:flutter_application_project_1/screens/update_patient.dart';
 
+import 'package:provider/provider.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => PatientProvider(),
+    child: const MyApp(),
+  ));
 }
 
 //Snackbar start

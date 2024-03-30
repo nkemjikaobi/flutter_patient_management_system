@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_medications_model.dart';
+import 'package:flutter_application_project_1/services/patient_service.dart';
 
 class AddMedicationModal extends StatefulWidget {
-  const AddMedicationModal({Key? key}) : super(key: key);
+  final String patientId;
+  const AddMedicationModal({Key? key, required this.patientId})
+      : super(key: key);
 
   @override
   State<AddMedicationModal> createState() => _AddMedicationModalState();
@@ -17,6 +20,14 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
   TextEditingController prescriptionController = TextEditingController();
 
   String doctor = "Dr. Rania Abesh";
+
+  bool isLoading = false;
+
+  Future addMedication(patient, id) async {
+    isLoading = true;
+    await PatientService().addMedication(patient, id);
+    isLoading = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,19 +129,30 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             // Implement logic for saving the medication data
-            // Navigator.of(context).pop();
+            if (_formKey.currentState!.validate()) {
+              PatientMedicationModel newMedication = PatientMedicationModel(
+                  name: nameController.text,
+                  prescription: prescriptionController.text,
+                  doctor: doctor,
+                  medicationDate: DateTime.now().toString());
 
-            _formKey.currentState!.validate();
+              await addMedication(newMedication, widget.patientId);
 
-            PatientMedicationModel newMedication = PatientMedicationModel(
-                name: nameController.text,
-                prescription: prescriptionController.text,
-                doctor: "",
-                medicationDate: DateTime.now().toString());
+              const snackBar = SnackBar(
+                content: Text('Patient medication added successfully.'),
+                backgroundColor: Colors.green,
+              );
+
+              Navigator.of(context).pop();
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           },
-          child: const Text('Save'),
+          child: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : const Text('Save'),
         ),
       ],
     );

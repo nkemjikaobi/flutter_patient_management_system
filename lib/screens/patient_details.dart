@@ -45,7 +45,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const AddTestModal();
+        return AddTestModal(patientId: patientInfo!.id);
       },
     );
   }
@@ -54,7 +54,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const AddMedicationModal();
+        return AddMedicationModal(patientId: patientInfo!.id);
       },
     );
   }
@@ -100,7 +100,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
+          backgroundColor: Colors.blueAccent,
           tooltip: _tabController.index == 1 ? 'Add Test' : 'Add Medication',
           onPressed: () {
             if (_tabController.index == 1) {
@@ -135,7 +135,7 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${patientInfo?.firstName} ${patientInfo?.lastName} $_selectedTabIndex",
+                                "${patientInfo?.firstName} ${patientInfo?.lastName}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -197,6 +197,16 @@ class _PatientDetailPageState extends State<PatientDetailPage>
                           ],
                         ),
                       ),
+                      if (!patientInfo!.isAdmitted)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Handle button onPressed event
+                            },
+                            child: const Text('Admit Patient'),
+                          ),
+                        ),
 
                       const SizedBox(height: 15),
                       Padding(
