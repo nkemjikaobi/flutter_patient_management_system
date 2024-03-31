@@ -16,6 +16,10 @@ class AddTestModal extends StatefulWidget {
 
 class _AddTestModalState extends State<AddTestModal> {
   final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addTestNameKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addTestValueKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addTestNotesKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addTestSaveBtn = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController valueController = TextEditingController();
@@ -37,6 +41,7 @@ class _AddTestModalState extends State<AddTestModal> {
                   height:
                       10), // Add spacing between Text and TextField if needed
               TextFormField(
+                key: addTestNameKey,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "This field is required";
@@ -58,6 +63,7 @@ class _AddTestModalState extends State<AddTestModal> {
                   height:
                       10), // Add spacing between Text and TextField if needed
               TextFormField(
+                key: addTestValueKey,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "This field is required";
@@ -80,6 +86,7 @@ class _AddTestModalState extends State<AddTestModal> {
               const Text("Notes", style: TextStyle(fontSize: 18)),
               const SizedBox(height: 10),
               TextField(
+                key: addTestNotesKey,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: notesController,
@@ -101,6 +108,7 @@ class _AddTestModalState extends State<AddTestModal> {
           child: const Text('Cancel'),
         ),
         TextButton(
+          key: addTestSaveBtn ,
           onPressed: () async {
             // Implement logic for saving the test data
             if (_formKey.currentState!.validate()) {

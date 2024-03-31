@@ -16,6 +16,9 @@ class AddMedicationModal extends StatefulWidget {
 
 class _AddMedicationModalState extends State<AddMedicationModal> {
   final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addMedicationNameKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addMedicationPrescriptionKey = GlobalKey<FormState>();
+  GlobalKey<FormState> addMedicationSaveBtn = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController prescriptionController = TextEditingController();
@@ -46,6 +49,7 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
                     height:
                         10), // Add spacing between Text and TextField if needed
                 TextFormField(
+                  key: addMedicationNameKey,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "This field is required";
@@ -68,6 +72,7 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
                     height:
                         10), // Add spacing between Text and TextField if needed
                 TextFormField(
+                  key: addMedicationPrescriptionKey,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "This field is required";
@@ -122,6 +127,7 @@ class _AddMedicationModalState extends State<AddMedicationModal> {
           child: const Text('Cancel'),
         ),
         TextButton(
+          key: addMedicationSaveBtn,
           onPressed: () async {
             // Implement logic for saving the medication data
             if (_formKey.currentState!.validate()) {
