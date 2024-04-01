@@ -22,6 +22,7 @@ class PatientProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _patients = await PatientService().getAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
@@ -49,14 +50,12 @@ class PatientProvider extends ChangeNotifier {
 
   Future<void> fetchPatientDetails(String id) async {
     _isLoading = true;
-    notifyListeners();
     try {
       _currentPatient = await PatientService().getPatientDetails(id);
     } catch (e) {
       // Handle error
     } finally {
       _isLoading = false;
-      notifyListeners();
     }
   }
 
@@ -67,6 +66,7 @@ class PatientProvider extends ChangeNotifier {
       await PatientService().addPatient(patient);
       // Refresh patient list
       await fetchAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
@@ -83,6 +83,7 @@ class PatientProvider extends ChangeNotifier {
       // Refresh patient details
       await fetchPatientDetails(id);
       await fetchAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
@@ -98,6 +99,7 @@ class PatientProvider extends ChangeNotifier {
       await PatientService().deletePatient(id);
       // Refresh patient list
       await fetchAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
@@ -114,6 +116,7 @@ class PatientProvider extends ChangeNotifier {
       // Refresh patient details
       await fetchPatientDetails(patientId);
       await fetchAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
@@ -131,6 +134,7 @@ class PatientProvider extends ChangeNotifier {
       // Refresh patient details
       await fetchPatientDetails(patientId);
       await fetchAllPatients();
+      notifyListeners();
     } catch (e) {
       // Handle error
     } finally {
