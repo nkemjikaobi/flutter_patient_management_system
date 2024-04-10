@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_project_1/models/patient_test_model.dart';
+import 'package:intl/intl.dart';
 
 class PatientTestsListItem extends StatelessWidget {
   final PatientTestModel patientTestData;
@@ -24,7 +25,8 @@ class PatientTestsListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(patientTestData.name),
-                  Text(patientTestData.testDate)
+                  Text(DateFormat('yyyy-MM-dd hh:mm')
+                      .format(DateTime.parse(patientTestData.testDate))),
                 ],
               ),
             ),

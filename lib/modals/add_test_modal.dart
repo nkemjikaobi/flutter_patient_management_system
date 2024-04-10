@@ -46,6 +46,10 @@ class _AddTestModalState extends State<AddTestModal> {
                   if (value == null || value.isEmpty) {
                     return "This field is required";
                   }
+
+                  if (value.length < 5) {
+                    return "Should be at least 5 characters";
+                  }
                   return null;
                 },
                 controller: nameController,
@@ -68,19 +72,22 @@ class _AddTestModalState extends State<AddTestModal> {
                   if (value == null || value.isEmpty) {
                     return "This field is required";
                   }
+                  // Convert the input value to an integer
+                  int? intValue = int.tryParse(value);
+                  if (intValue == null || intValue < 0 || intValue > 10) {
+                    return "Enter a number between 0-10";
+                  }
                   return null;
                 },
                 controller: valueController,
                 keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: '7', // Placeholder text
+                  labelText: 'number between 0 and 10',
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 10),
 
               const Text("Notes", style: TextStyle(fontSize: 18)),
@@ -108,7 +115,7 @@ class _AddTestModalState extends State<AddTestModal> {
           child: const Text('Cancel'),
         ),
         TextButton(
-          key: addTestSaveBtn ,
+          key: addTestSaveBtn,
           onPressed: () async {
             // Implement logic for saving the test data
             if (_formKey.currentState!.validate()) {
