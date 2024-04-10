@@ -63,7 +63,24 @@ class PatientListItem extends StatelessWidget {
                               fontWeight: FontWeight.w300),
                         ),
                         const SizedBox(width: 30),
-                        Text("Condition: ${patientData.condition}"),
+                        const Text(
+                          "Condition: ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.black, // Adjust the color as needed
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          patientData.condition,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                            color: patientData.condition == "critical"
+                                ? Colors.red
+                                : Colors.green, // Change the color here
+                          ),
+                        )
                       ],
                     )
                   ],
