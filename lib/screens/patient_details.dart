@@ -8,7 +8,6 @@ import 'package:flutter_application_project_1/providers/patient_provider.dart';
 import 'package:flutter_application_project_1/screens/patient_medications_list_item.dart';
 import 'package:flutter_application_project_1/screens/patient_tests_list_item.dart';
 import 'package:flutter_application_project_1/screens/update_patient.dart';
-import 'package:flutter_application_project_1/services/patient_service.dart';
 import 'package:provider/provider.dart';
 //import 'package:flutter/services.dart';
 //import 'package:provider/provider.dart';
@@ -33,7 +32,6 @@ class _PatientDetailPageState extends State<PatientDetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
-
 
   Future<void> _navigateToAddTestModal(BuildContext context) async {
     showDialog(

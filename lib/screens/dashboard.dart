@@ -18,7 +18,6 @@ class PatientListTile extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: () {
-
           Navigator.push(context, CupertinoPageRoute(builder: (context) {
             return PatientDetailPage(patientId: patientData.id);
           }));
